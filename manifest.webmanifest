@@ -1,0 +1,22 @@
+{
+  "name": "Santo Rosario · Universidad Católica Boliviana",
+  "short_name": "Santo Rosario",
+  "description": "Guía para rezar el Santo Rosario en grupo o personalmente, con lecturas bíblicas, jaculatorias y Letanías.",
+  "lang": "es-BO",
+  "dir": "ltr",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0D4275",
+  "theme_color": "#0D4275",
+  "categories": ["lifestyle", "education", "books"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

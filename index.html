@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Santo Rosario · UCB</title>
+  <meta name="description" content="Guía para rezar el Santo Rosario, en grupo o personalmente, con lecturas bíblicas, jaculatorias y Letanías. Universidad Católica Boliviana «San Pablo».">
+  <meta name="theme-color" content="#0D4275">
+  <meta name="color-scheme" content="light dark">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Santo Rosario">
+  <meta property="og:title" content="Santo Rosario · Universidad Católica Boliviana">
+  <meta property="og:description" content="Reza el Santo Rosario en grupo o personalmente, con lecturas, jaculatorias y Letanías.">
+  <meta property="og:image" content="icons/icon-512.png">
+  <link rel="preload" href="fonts/source-serif-4-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/fira-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/app.css">
+  <script>
+    // Aplica tema y tamaño antes de pintar (evita parpadeo)
+    try {
+      var c = JSON.parse(localStorage.getItem('ucb-rosario-ajustes') || '{}');
+      if (c.tema && c.tema !== 'auto') document.documentElement.dataset.theme = c.tema;
+      if (c.escala) document.documentElement.style.setProperty('--escala', c.escala);
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+
+  <!-- ============ INICIO ============ -->
+  <section id="vista-inicio" class="vista" aria-labelledby="titulo-app">
+    <header class="hero">
+      <div class="hero-marca">
+        <img class="hero-escudo" src="img/escudo.png" alt="Escudo de la Universidad Católica Boliviana" width="96" height="129">
+        <img class="hero-logotipo" src="img/logotipo-blanco.png" alt="Universidad Católica Boliviana" width="240" height="149">
+      </div>
+      <div class="hero-titulo">
+        <p class="sobretitulo">Regional Tarija</p>
+        <h1 id="titulo-app">Santo Rosario</h1>
+        <p class="lema">Veritas in caritate</p>
+      </div>
+    </header>
+
+    <main id="main" class="inicio-cuerpo">
+      <article class="tarjeta hoy" aria-live="polite">
+        <p class="hoy-fecha" id="hoy-fecha"></p>
+        <p class="hoy-tiempo" id="hoy-tiempo"></p>
+        <h2 class="hoy-misterios"><span class="kicker">Misterios</span> <span id="hoy-nombre"></span></h2>
+        <p class="hoy-nota" id="hoy-nota" hidden></p>
+        <ol class="hoy-lista" id="hoy-lista"></ol>
+      </article>
+
+      <div class="grupo-control">
+        <span class="control-label" id="lbl-modo">¿Cómo vas a rezar?</span>
+        <div class="segmentado" role="radiogroup" aria-labelledby="lbl-modo">
+          <button type="button" role="radio" data-modo="grupal" aria-checked="true">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M2.5 19c.6-3.2 2.9-5 5.5-5s4.9 1.8 5.5 5M13.5 14.6c.9-.6 1.9-.9 3-.9 2.3 0 4.2 1.6 4.8 4.3"/></svg>
+            En grupo
+          </button>
+          <button type="button" role="radio" data-modo="individual" aria-checked="false">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 19.5c.7-3.6 3.4-5.6 6.5-5.6s5.8 2 6.5 5.6"/></svg>
+            Personal
+          </button>
+        </div>
+        <p class="ayuda" id="ayuda-modo">El guía lee la primera parte y todos responden la segunda.</p>
+      </div>
+
+      <div class="acciones-inicio">
+        <button type="button" class="btn btn-primario" id="btn-comenzar">
+          Comenzar el Rosario
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <button type="button" class="btn btn-secundario" id="btn-continuar" hidden>
+          <span>Continuar donde lo dejé</span>
+          <small id="continuar-detalle"></small>
+        </button>
+      </div>
+
+      <details class="tarjeta otros">
+        <summary>Rezar otros misterios</summary>
+        <div class="chips" id="chips-misterios" role="radiogroup" aria-label="Misterios"></div>
+      </details>
+
+      <nav class="enlaces-inicio" aria-label="Más opciones">
+        <button type="button" class="enlace" data-abrir="ajustes">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          Ajustes
+        </button>
+        <button type="button" class="enlace" id="btn-compartir">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+          Compartir
+        </button>
+        <button type="button" class="enlace" id="btn-instalar" hidden>
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+          Instalar
+        </button>
+        <button type="button" class="enlace" data-abrir="acerca">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg>
+          Acerca de
+        </button>
+      </nav>
+
+      <footer class="pie">
+        <img src="img/logotipo-azul.png" class="pie-logo solo-claro" alt="" width="140" height="87">
+        <img src="img/logotipo-blanco.png" class="pie-logo solo-oscuro" alt="" width="140" height="87">
+        <p>Universidad Católica Boliviana «San Pablo»</p>
+      </footer>
+    </main>
+  </section>
+
+  <!-- ============ ORACIÓN ============ -->
+  <section id="vista-rezo" class="vista" hidden aria-label="Rezo del Rosario">
+    <header class="barra">
+      <button type="button" class="icono" id="btn-salir" aria-label="Volver al inicio">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="barra-centro">
+        <img src="img/escudo.png" alt="" class="barra-escudo" width="22" height="30">
+        <div>
+          <p class="barra-seccion" id="barra-seccion"></p>
+          <p class="barra-sub" id="barra-sub"></p>
+        </div>
+      </div>
+      <button type="button" class="icono" id="btn-proyeccion" aria-label="Modo proyección" aria-pressed="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+      </button>
+      <button type="button" class="icono" data-abrir="ajustes" aria-label="Ajustes">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+      </button>
+    </header>
+    <div class="progreso" role="progressbar" aria-label="Avance del Rosario" aria-valuemin="0" aria-valuemax="100" id="progreso">
+      <div class="progreso-barra" id="progreso-barra"></div>
+      <div class="progreso-marcas" id="progreso-marcas"></div>
+    </div>
+
+    <div class="cuentas" id="cuentas" aria-hidden="true"></div>
+
+    <main class="rezo-cuerpo" id="rezo-cuerpo" tabindex="-1">
+      <article class="paso" id="paso" aria-live="polite"></article>
+    </main>
+
+    <footer class="navegacion">
+      <button type="button" class="btn btn-nav btn-atras" id="btn-atras">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+        <span>Atrás</span>
+      </button>
+      <button type="button" class="btn btn-nav btn-siguiente" id="btn-siguiente">
+        <span id="txt-siguiente">Siguiente</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </footer>
+  </section>
+
+  <!-- ============ AJUSTES ============ -->
+  <dialog id="dlg-ajustes" class="hoja" aria-labelledby="ttl-ajustes">
+    <form method="dialog" class="hoja-cuerpo">
+      <header class="hoja-cabecera">
+        <h2 id="ttl-ajustes">Ajustes</h2>
+        <button class="icono" value="cerrar" aria-label="Cerrar">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <fieldset>
+        <legend>Lectura</legend>
+        <div class="fila">
+          <span>Tamaño de letra</span>
+          <div class="pasos-tamano">
+            <button type="button" class="icono borde" id="letra-menos" aria-label="Reducir letra">A−</button>
+            <output id="letra-valor">100%</output>
+            <button type="button" class="icono borde" id="letra-mas" aria-label="Aumentar letra">A+</button>
+          </div>
+        </div>
+        <div class="fila">
+          <span id="lbl-tema">Apariencia</span>
+          <div class="segmentado chico" role="radiogroup" aria-labelledby="lbl-tema">
+            <button type="button" role="radio" data-tema="auto">Auto</button>
+            <button type="button" role="radio" data-tema="light">Claro</button>
+            <button type="button" role="radio" data-tema="dark">Oscuro</button>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Contenido del Rosario</legend>
+        <label class="interruptor"><input type="checkbox" data-ajuste="lecturas"><span>Lecturas bíblicas, fruto y meditación</span></label>
+        <label class="interruptor"><input type="checkbox" data-ajuste="jaculatorias"><span>Jaculatorias al final de cada misterio</span></label>
+        <label class="interruptor"><input type="checkbox" data-ajuste="ofrecimiento"><span>Acto de contrición y ofrecimiento</span></label>
+        <label class="interruptor"><input type="checkbox" data-ajuste="letanias"><span>Letanías Lauretanas</span></label>
+        <div class="fila columna">
+          <label for="sel-advocacion">Oración a la Virgen al final</label>
+          <select id="sel-advocacion" data-ajuste="advocacion">
+            <option value="chaguaya">Virgen de Chaguaya (Tarija)</option>
+            <option value="copacabana">Virgen de Copacabana (Bolivia)</option>
+            <option value="ambas">Ambas</option>
+            <option value="ninguna">Ninguna</option>
+          </select>
+        </div>
+        <label class="interruptor"><input type="checkbox" data-ajuste="liturgico"><span>Domingos según el tiempo litúrgico<small>Gozosos en Adviento y Navidad; Dolorosos en Cuaresma</small></span></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Durante el rezo</legend>
+        <label class="interruptor"><input type="checkbox" data-ajuste="pantalla"><span>Mantener la pantalla encendida</span></label>
+        <label class="interruptor"><input type="checkbox" data-ajuste="vibrar"><span>Vibrar al terminar cada misterio</span></label>
+      </fieldset>
+      <p class="ayuda centro">Atajos: <kbd>→</kbd> o <kbd>Espacio</kbd> avanza · <kbd>←</kbd> retrocede · funciona con presentadores inalámbricos.</p>
+    </form>
+  </dialog>
+
+  <!-- ============ ACERCA DE ============ -->
+  <dialog id="dlg-acerca" class="hoja" aria-labelledby="ttl-acerca">
+    <form method="dialog" class="hoja-cuerpo">
+      <header class="hoja-cabecera">
+        <h2 id="ttl-acerca">Acerca de</h2>
+        <button class="icono" value="cerrar" aria-label="Cerrar">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+      <div class="acerca">
+        <img src="img/isologo-vertical.png" alt="Universidad Católica Boliviana" class="acerca-logo" width="180" height="291">
+        <p>Guía para rezar el Santo Rosario en comunidad o de forma personal, preparada para la comunidad de la Universidad Católica Boliviana «San Pablo», Regional Tarija.</p>
+        <p>«El Rosario, aunque se distingue por su carácter mariano, es una oración centrada en la cristología… Con él, el pueblo cristiano aprende de María a contemplar la belleza del rostro de Cristo».<br><small>— San Juan Pablo II, <cite>Rosarium Virginis Mariae</cite>, 1</small></p>
+        <h3>Cómo usarla</h3>
+        <ul>
+          <li><strong>En grupo:</strong> el texto en azul lo lee el guía; el resaltado en amarillo lo responden todos.</li>
+          <li><strong>Modo proyección:</strong> amplía el texto para pantalla o proyector.</li>
+          <li><strong>Sin conexión:</strong> una vez abierta, funciona sin internet.</li>
+        </ul>
+        <h3>Instalar en el celular</h3>
+        <ul>
+          <li><strong>Android (Chrome):</strong> menú ⋮ → «Instalar aplicación».</li>
+          <li><strong>iPhone (Safari):</strong> botón Compartir → «Agregar a pantalla de inicio».</li>
+        </ul>
+        <h3>Fuentes</h3>
+        <p class="chico">Misterios según <cite>Rosarium Virginis Mariae</cite> (2002). Letanías Lauretanas con las invocaciones añadidas en 2020. Citas bíblicas en fragmentos breves; se indica la referencia de cada una.</p>
+        <p class="chico version">Versión <span id="version"></span></p>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="aviso" id="aviso" role="status" aria-live="polite" hidden></div>
+
+  <script src="js/contenido.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
